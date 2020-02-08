@@ -1,0 +1,92 @@
+mysql> SHOW TABLES;
+Empty set (0.00 sec)
+
+mysql> CREATE TABLE StudentData(No INT(10) AUTO_INCREMENT,RollNo INT(6),Name VARCHAR(25),Division CHAR(1), PhoneNo INT(10),PRIMARY KEY(No));
+Query OK, 0 rows affected (0.32 sec)
+
+mysql> SHOW TABLES;
++----------------+
+| Tables_in_root |
++----------------+
+| StudentData    |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> DESCRIBE StudentData;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| No       | int(10)     | NO   | PRI | NULL    | auto_increment |
+| RollNo   | int(6)      | YES  |     | NULL    |                |
+| Name     | varchar(25) | YES  |     | NULL    |                |
+| Division | char(1)     | YES  |     | NULL    |                |
+| PhoneNo  | int(10)     | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> INSERT INTO StudentData VALUES(221064, 'Kartikeya Vishnoi', 'A', '0101010101');                           ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO StudentData VALUES(1,221064, 'Kartikeya Vishnoi', 'A', '0101010101');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> INSERT INTO StudentData VALUES(2,221037, 'Parikshit Raje','A','1111122222');Query OK, 1 row affected (0.08 sec)
+
+mysql> INSERT INTO StudentData VALUES(3,221013,'Anom Devgun','A',222221111);
+Query OK, 1 row affected (0.15 sec)
+
+mysql> INSERT INTO StudentData VALUES(4,221025,'Viraj Kadlag','A',333332222);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> INSERT INTO StudentData VALUES(5,221060,'Shubham Ubhe','A',444455555);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> INSERT INTO StudentData VALUES(6,221043,'Pranit Tambe','A',555556666);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> SELECT * FROM StudentData;
++----+--------+-------------------+----------+------------+
+| No | RollNo | Name              | Division | PhoneNo    |
++----+--------+-------------------+----------+------------+
+|  1 | 221064 | Kartikeya Vishnoi | A        |  101010101 |
+|  2 | 221037 | Parikshit Raje    | A        | 1111122222 |
+|  3 | 221013 | Anom Devgun       | A        |  222221111 |
+|  4 | 221025 | Viraj Kadlag      | A        |  333332222 |
+|  5 | 221060 | Shubham Ubhe      | A        |  444455555 |
+|  6 | 221043 | Pranit Tambe      | A        |  555556666 |
++----+--------+-------------------+----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> CREATE VIEW v1 AS SELECT RollNo,Name,Division FROM StudentData;
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> SELECT * FROM v1;
++--------+-------------------+----------+
+| RollNo | Name              | Division |
++--------+-------------------+----------+
+| 221064 | Kartikeya Vishnoi | A        |
+| 221037 | Parikshit Raje    | A        |
+| 221013 | Anom Devgun       | A        |
+| 221025 | Viraj Kadlag      | A        |
+| 221060 | Shubham Ubhe      | A        |
+| 221043 | Pranit Tambe      | A        |
++--------+-------------------+----------+
+6 rows in set (0.00 sec)
+
+mysql> CREATE INDEX i1 ON StudentData(RollNo,Name,Division,PhoneNo);
+Query OK, 0 rows affected (0.38 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM StudentData;
++----+--------+-------------------+----------+------------+
+| No | RollNo | Name              | Division | PhoneNo    |
++----+--------+-------------------+----------+------------+
+|  3 | 221013 | Anom Devgun       | A        |  222221111 |
+|  4 | 221025 | Viraj Kadlag      | A        |  333332222 |
+|  2 | 221037 | Parikshit Raje    | A        |  111122222 |
+|  6 | 221043 | Pranit Tambe      | A        |  555556666 |
+|  5 | 221060 | Shubham Ubhe      | A        |  444455555 |
+|  1 | 221064 | Kartikeya Vishnoi | A        |  101010101 |
++----+--------+-------------------+----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> 
+

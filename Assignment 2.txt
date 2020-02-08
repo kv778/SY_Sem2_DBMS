@@ -1,0 +1,197 @@
+mysql> SHOW TABLES;
++----------------+
+| Tables_in_root |
++----------------+
+| StudentData    |
+| v1             |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM StudentData;
++----+--------+-------------------+----------+------------+
+| No | RollNo | Name              | Division | PhoneNo    |
++----+--------+-------------------+----------+------------+
+|  3 | 221013 | Anom Devgun       | A        |  222221111 |
+|  4 | 221025 | Viraj Kadlag      | A        |  333332222 |
+|  2 | 221037 | Parikshit Raje    | A        | 1111122222 |
+|  6 | 221043 | Pranit Tambe      | A        |  555556666 |
+|  5 | 221060 | Shubham Ubhe      | A        |  444455555 |
+|  1 | 221064 | Kartikeya Vishnoi | A        |  101010101 |
++----+--------+-------------------+----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> UPDATE StudentData SET Name="Piyush" WHERE RollNo=221025;
+Query OK, 1 row affected (1.65 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM StudentData;
++----+--------+-------------------+----------+------------+
+| No | RollNo | Name              | Division | PhoneNo    |
++----+--------+-------------------+----------+------------+
+|  3 | 221013 | Anom Devgun       | A        |  222221111 |
+|  4 | 221025 | Piyush            | A        |  333332222 |
+|  2 | 221037 | Parikshit Raje    | A        | 1111122222 |
+|  6 | 221043 | Pranit Tambe      | A        |  555556666 |
+|  5 | 221060 | Shubham Ubhe      | A        |  444455555 |
+|  1 | 221064 | Kartikeya Vishnoi | A        |  101010101 |
++----+--------+-------------------+----------+------------+
+6 rows in set (0.03 sec)
+
+mysql> DELETE FROM StudentData WHERE RollNo=221025;
+Query OK, 1 row affected (0.31 sec)
+
+mysql> SELECT * FROM StudentData;
++----+--------+-------------------+----------+------------+
+| No | RollNo | Name              | Division | PhoneNo    |
++----+--------+-------------------+----------+------------+
+|  3 | 221013 | Anom Devgun       | A        |  222221111 |
+|  2 | 221037 | Parikshit Raje    | A        | 1111122222 |
+|  6 | 221043 | Pranit Tambe      | A        |  555556666 |
+|  5 | 221060 | Shubham Ubhe      | A        |  444455555 |
+|  1 | 221064 | Kartikeya Vishnoi | A        |  101010101 |
++----+--------+-------------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> DELETE FROM StudentData WHERE RollNo<221040;
+Query OK, 2 rows affected (0.79 sec)
+
+mysql> SELECT * FROM StudentData;
++----+--------+-------------------+----------+-----------+
+| No | RollNo | Name              | Division | PhoneNo   |
++----+--------+-------------------+----------+-----------+
+|  6 | 221043 | Pranit Tambe      | A        | 555556666 |
+|  5 | 221060 | Shubham Ubhe      | A        | 444455555 |
+|  1 | 221064 | Kartikeya Vishnoi | A        | 101010101 |
++----+--------+-------------------+----------+-----------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT CHAR_LENGTH(Name) AS NameLength FROM StudentData;
++------------+
+| NameLength |
++------------+
+|         12 |
+|         12 |
+|         17 |
++------------+
+3 rows in set (1.22 sec)
+
+mysql> SELECT UCASE(Name) AS UppercaseName FROM StudentData;
++-------------------+
+| UppercaseName     |
++-------------------+
+| PRANIT TAMBE      |
+| SHUBHAM UBHE      |
+| KARTIKEYA VISHNOI |
++-------------------+
+3 rows in set (0.33 sec)
+
+mysql> SELECT BIN(RollNo) AS BinaryRollNo FROM StudentData;
++--------------------+
+| BinaryRollNo       |
++--------------------+
+| 110101111101110011 |
+| 110101111110000100 |
+| 110101111110001000 |
++--------------------+
+3 rows in set (0.06 sec)
+
+mysql> SELECT RollNo,Name,Division,IF(RollNo>221060,"Batch A3","Batch A2") FROM StudentData;
++--------+-------------------+----------+-----------------------------------------+
+| RollNo | Name              | Division | IF(RollNo>221060,"Batch A3","Batch A2") |
++--------+-------------------+----------+-----------------------------------------+
+| 221043 | Pranit Tambe      | A        | Batch A2                                |
+| 221060 | Shubham Ubhe      | A        | Batch A2                                |
+| 221064 | Kartikeya Vishnoi | A        | Batch A3                                |
++--------+-------------------+----------+-----------------------------------------+
+3 rows in set (0.07 sec)
+
+mysql> SELECT AVG(RollNo) AS AvgRollNo FROM StudentData;
++-------------+
+| AvgRollNo   |
++-------------+
+| 221055.6667 |
++-------------+
+1 row in set (0.11 sec)
+
+mysql> SELECT * FROM StudentData;
++----+--------+-------------------+----------+-----------+
+| No | RollNo | Name              | Division | PhoneNo   |
++----+--------+-------------------+----------+-----------+
+|  3 | 221013 | Anom Devgun       | A        | 222221111 |
+|  4 | 221025 | Viraj Kadlag      | A        | 333332222 |
+|  2 | 221037 | Parikshit Raje    | A        | 111122222 |
+|  6 | 221043 | Pranit Tambe      | A        | 555556666 |
+|  5 | 221060 | Shubham Ubhe      | A        | 444455555 |
+|  1 | 221064 | Kartikeya Vishnoi | A        | 101010101 |
++----+--------+-------------------+----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT RollNo,Name FROM StudentData WHERE Division='A' UNION ALL SELECT RollNo,Name FROM StudentData WHERE RollNo>221020;
++--------+-------------------+
+| RollNo | Name              |
++--------+-------------------+
+| 221013 | Anom Devgun       |
+| 221025 | Viraj Kadlag      |
+| 221037 | Parikshit Raje    |
+| 221060 | Shubham Ubhe      |
+| 221064 | Kartikeya Vishnoi |
+| 221025 | Viraj Kadlag      |
+| 221037 | Parikshit Raje    |
+| 221043 | Pranit Tambe      |
+| 221060 | Shubham Ubhe      |
+| 221064 | Kartikeya Vishnoi |
++--------+-------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT RollNo,Name FROM StudentData WHERE Division='A' UNION ALL SELECT RollNo,Name FROM StudentData WHERE RollNo>221020 ORDER BY RollNo;
++--------+-------------------+
+| RollNo | Name              |
++--------+-------------------+
+| 221013 | Anom Devgun       |
+| 221025 | Viraj Kadlag      |
+| 221025 | Viraj Kadlag      |
+| 221037 | Parikshit Raje    |
+| 221037 | Parikshit Raje    |
+| 221043 | Pranit Tambe      |
+| 221060 | Shubham Ubhe      |
+| 221060 | Shubham Ubhe      |
+| 221064 | Kartikeya Vishnoi |
+| 221064 | Kartikeya Vishnoi |
++--------+-------------------+
+10 rows in set (0.00 sec)
+
+mysql> SELECT Name FROM StudentData WHERE RollNo<221050;
++----------------+
+| Name           |
++----------------+
+| Anom Devgun    |
+| Viraj Kadlag   |
+| Parikshit Raje |
+| Pranit Tambe   |
++----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT Name FROM StudentData WHERE RollNo<221050 AND Division='A';
++----------------+
+| Name           |
++----------------+
+| Anom Devgun    |
+| Viraj Kadlag   |
+| Parikshit Raje |
++----------------+
+3 rows in set (0.02 sec)
+
+mysql> SELECT Name FROM StudentData WHERE RollNo>221050 OR Division='B';
++-------------------+
+| Name              |
++-------------------+
+| Pranit Tambe      |
+| Shubham Ubhe      |
+| Kartikeya Vishnoi |
++-------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Name FROM StudentData WHERE RollNo>221050 AND Division='B';
+Empty set (0.00 sec)
+
+mysql> 
