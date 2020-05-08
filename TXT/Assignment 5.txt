@@ -1,0 +1,101 @@
+MariaDB [(none)]> select root;
+MariaDB [root]> create table student(rollno int(2),course varchar(20), course_code varchar(20),sem int(2), marks int(10),Percentage int(10));
+Query OK, 0 rows affected (0.318 sec)
+
+MariaDB [root]> insert into employee values(01,'MIII',' CO2G,1,900,90);
+Query OK, 1 row affected (0.075 sec)
+
+MariaDB [root]> insert into employee values(02,'MIII','CO2G,1,650,65);
+Query OK, 1 row affected (0.026 sec)
+
+MariaDB [root]> insert into employee values(03,'MIII',' CO2G ',4,450,85);
+Query OK, 1 row affected (0.025 sec)
+
+MariaDB [root]> insert into employee values(04,'MIII', ‘CO2G’,4,650,75);
+Query OK, 1 row affected (0.030 sec)
+
+MariaDB [root]> insert into employee values(05,'MIII', ‘CO2G’,2,750,82);
+Query OK, 1 row affected (0.039 sec)
+
+MariaDB [root]> insert into employee values(06,'EGG’, ‘CO2G’,6,750,93);
+Query OK, 1 row affected (0.031 sec)
+
+MariaDB [root]> insert into employee values(07, 'EGG’, ‘CO2G’,5,550,63);
+Query OK, 1 row affected (0.031 sec)
+
+MariaDB [root]> insert into employee values(08, 'EGG’, ‘CO2G’,3,450,44);
+Query OK, 1 row affected (0.032 sec)
+
+MariaDB [root]> insert into employee values(09, 'EGG’, ‘CO2G’,3,399,54);
+Query OK, 1 row affected (0.032 sec)
+
+MariaDB [root]> select * from student;
++--------+--------+-------------+------+-------+------------+
+| rollno | course | course_code | Sem  | Marks | Percentage |
++--------+--------+-------------+------+-------+------------+
+|      1 | MIII   | CO2G        |    1 |   900 |         90 |
+|      2 | MIII   | CO2G        |    1 |   650 |         65 |
+|      3 | MIII   | CO2G        |    4 |   450 |         85 |
+|      4 | MIII   | CO2G        |    4 |   650 |         75 |
+|      5 | MIII   | CO2G        |    2 |   750 |         82 |
+|      6 | EGG    | CO2G        |    6 |   750 |         93 |
+|      7 | EGG    | CO2G        |    5 |   550 |         63 |
+|      8 | EGG    | CO2G        |    3 |   450 |         44 |
+|      9 | EGG    | CO2G        |    3 |   399 |         54 |
++--------+--------+-------------+------+-------+------------+
+9 rows in set (0.000 sec)
+
+
+
+
+
+
+MariaDB [root]> Delimiter $
+MariaDB [root]> CREATE PROCEDURE GETRANK(IN crc varchar(255))
+ -> begin
+-> declare distinction int default 0;
+-> declare firstclass int default 0;
+-> declare highersec int default 0;
+-> declare sec int default 0;
+-> declare pass int default 0;
+-> declare per int default 0;
+-> DECLARE finished int default 0;
+-> declare r cursor for  select Percentage from student course=crc;
+-> DECLARE CONTINUE HANDLER 
+-> FOR NOT FOUND SET finished=1;
+-> open r;
+-> lp:loop
+-> FETCH r INTO per;
+-> IF finished =1 THEN LEAVE lp;
+-> elseif per<100 and per>=80 then set distinction :=distinction+1;
+-> elseif per<80 and per>=70 then set firstclass:=firstclass+1;
+-> elseif per<70 and per>=60 then set highersec:=highersec+1;
+-> elseif per<60 and per>=50 then set sec:=sec+1;
+-> elseif per<50 then set pass:=pass+1;
+-> end if;
+-> END LOOP lp;
+-> CLOSE r;
+-> SELECT distinction,firstclass,highersec,sec,pass;
+-> end;
+->$
+Query OK, 0 rows affected (0.036 sec)
+MariaDB [root]> DELIMITER ;
+MariaDB [root]> CALL GETRANK('MIII');
++-------------+------------+-----------+------+------+
+| distinction | firstclass | highersec | sec  | pass |
++-------------+------------+-----------+------+------+
+|           3 |          1 |         1 |    0 |    0 |
++-------------+------------+-----------+------+------+
+1 row in set (0.001 sec)
+
+Query OK, 0 rows affected (0.005 sec)
+
+MariaDB [root]> CALL GETRANK('EGG');
++-------------+------------+-----------+------+------+
+| distinction | firstclass | highersec | sec  | pass |
++-------------+------------+-----------+------+------+
+|           1 |          0 |         1 |    1 |    1 |
++-------------+------------+-----------+------+------+
+1 row in set (0.000 sec)
+
+Query OK, 0 rows affected (0.004 sec)

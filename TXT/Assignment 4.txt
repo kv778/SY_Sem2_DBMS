@@ -1,0 +1,38 @@
+PROGRAM:-
+CREATE TABLE
+CREATE TABLE EMPLOYEE_(employee_no int(5),employee_name varchar(20),join_date int(10),designation varchar(10),salary int(10));
+Insert Into EMPLOYEE_ VALUES(1,'RAJ',11/11/1111,'PUNE',50000);
+SELECT * FROM EMPLOYEE_;
+
+IMPLICIT CURSOR:
+Select employee_no,employee_name,salary
+From EMPLOYEE_
+order by salary desc limit 5;
+
+EXPLICIT CURSOR
+delimiter /
+CREATE PROCEDURE sp()
+begin
+DECLARE x int default 0;
+DECLARE y varchar(20);
+DECLARE z int(10) default 0;
+DECLARE finished int default 0;
+declare r 
+	cursor for
+	Select employee_no,employee_name,salary
+	From EMPLOYEE_
+	order by salary desc limit 5;
+DECLARE CONTINUE HANDLER 
+	FOR NOT FOUND SET finished=1;
+open r;
+lp:loop
+FETCH r INTO x,y,z;
+IF finished =1 THEN LEAVE lp;
+end if;
+select x,y,z;
+END LOOP lp;
+CLOSE r;
+end;
+/
+DELIMITER ;
+CALL raj.sp();

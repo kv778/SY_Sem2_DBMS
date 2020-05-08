@@ -1,0 +1,281 @@
+MariaDB [(none)]> use root
+Database changed
+MariaDB [root]> Create Table employee(employee_no int(5),employee_name varchar(20),join_date varchar(20),designation varchar(20),salary int(10));
+Query OK, 0 rows affected (0.483 sec)
+
+MariaDB [root]> Create Table employee_table(employee_no int(5),employee_name varchar(20),join_date varchar(20),designation varchar(20),salary int(10));
+Query OK, 0 rows affected (0.483 sec)
+
+MariaDB [root]> Select * from employee;
+Empty set (0.012 sec)
+
+MariaDB [root]> insert into employee values(001,'Abhi','14/04/2001','manager',20000);
+Query OK, 1 row affected (0.048 sec)
+
+MariaDB [root]> insert into employee values(002,'Tejas','28/12/1999','CameraMan',25000);
+Query OK, 1 row affected (0.030 sec)
+
+MariaDB [root]> insert into employee values(003,'Satyam','28/05/2000','Legal Head',35000);
+Query OK, 1 row affected (0.039 sec)
+
+MariaDB [root]> insert into employee values(004,'Mayur','08/04/2000','Script Writer',25000);
+Query OK, 1 row affected (0.031 sec)
+
+MariaDB [root]> insert into employee values(005,'Aditya','03/02/2001','Stunt Head',15000);
+Query OK, 1 row affected (0.027 sec)
+
+MariaDB [root]> insert into employee values(006,'Pratik','11/02/2001','CEO',50000);
+Query OK, 1 row affected (0.032 sec)
+
+MariaDB [root]> insert into employee values(007,'Saurabh','07/06/2000','Car Owner',40000);
+Query OK, 1 row affected (0.032 sec)
+
+MariaDB [root]> insert into employee values(008,'Shreyas','18/06/2000','Security Owner',40000);
+Query OK, 1 row affected (0.030 sec)
+
+MariaDB [root]> select * from employee;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           1 | Abhi          | 14/04/2001 | manager        |  20000 |
+|           2 | Tejas         | 28/12/1999 | CameraMan      |  25000 |
+|           3 | Satyam        | 28/05/2000 | Legal Head     |  35000 |
+|           4 | Mayur         | 08/04/2000 | Script Writer  |  25000 |
+|           5 | Aditya        | 03/02/2001 | Stunt Head     |  15000 |
+|           6 | Pratik        | 11/02/2001 | CEO            |  50000 |
+|           7 | Saurabh       | 07/06/2000 | Car Owner      |  40000 |
+|           8 | Shreyas       | 18/06/2000 | Security Owner |  40000 |
++-------------+---------------+------------+----------------+--------+
+8 rows in set (0.000 sec)
+
+MariaDB [root]> Delimiter $
+MariaDB [root]> create trigger empinsert
+    -> AFTER INSERT on employee for each row
+    -> begin
+    -> insert into employee_table values(NEW.employee_no,NEW.employee_name,NEW.join_date,NEW.designation,NEW.salary);
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.088 sec)
+
+MariaDB [root]> DELMITER $
+
+MariaDB [root]> select * from  employee;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           1 | Abhi          | 14/04/2001 | manager        |  20000 |
+|           2 | Tejas         | 28/12/1999 | CameraMan      |  25000 |
+|           3 | Satyam        | 28/05/2000 | Legal Head     |  35000 |
+|           4 | Mayur         | 08/04/2000 | Script Writer  |  25000 |
+|           5 | Aditya        | 03/02/2001 | Stunt Head     |  25000 |
+|           6 | Pratik        | 11/02/2001 | CEO            |  50000 |
+|           7 | Saurabh       | 07/06/2000 | Car Owner      |  40000 |
+|           8 | Shreyas       | 18/06/2000 | Security Owner |  40000 |
++-------------+---------------+------------+----------------+--------+
+8 rows in set (0.000 sec)
+
+MariaDB [root]> select * from  employee_table;
+Empty set (0.000 sec)
+
+MariaDB [root]> INSERT INTO employee values(011,'Shubhda','03/04/2001','Cleaning Head',15000);
+Query OK, 1 row affected (0.030 sec)
+
+MariaDB [root]> select * from employee_table;
++-------------+---------------+------------+---------------+--------+
+| employee_no | employee_name | join_date  | designation   | salary |
++-------------+---------------+------------+---------------+--------+
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head |  15000 |
++-------------+---------------+------------+---------------+--------+
+1 row in set (0.000 sec)
+
+
+
+
+MariaDB [root]> Delimiter $
+MariaDB [root]> create trigger empdelete
+    -> BEFORE DELETE on employee for each row
+    -> begin
+    -> DELETE FROM EMPLOYEE_TABLE where OLD.employee_no=EMPLOYEE_TABLE.employee_no;
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.050 sec)
+
+MariaDB [root]> delimiter ;
+MariaDB [root]> select * from employee;
++-------------+---------------+------------+-------------------+--------+
+| employee_no | employee_name | join_date  | designation       | salary |
++-------------+---------------+------------+-------------------+--------+
+|           1 | Abhi          | 14/04/2001 | manager           |  20000 |
+|           2 | Tejas         | 28/12/1999 | CameraMan         |  25000 |
+|           3 | Satyam        | 28/05/2000 | Legal Head        |  35000 |
+|           4 | Mayur         | 08/04/2000 | Script Writer     |  25000 |
+|           5 | Aditya        | 03/02/2001 | Stunt Head        |  25000 |
+|           6 | Pratik        | 11/02/2001 | CEO               |  50000 |
+|           7 | Saurabh       | 07/06/2000 | Car Owner         |  40000 |
+|           8 | Shreyas       | 18/06/2000 | Security Owner    |  40000 |
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head     |  15000 |
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head     |  15000 |
+|          21 | Rajesh        | 02/07/2011 | Sanitization Head |  25000 |
++-------------+---------------+------------+-------------------+--------+
+11 rows in set (0.003 sec)
+
+MariaDB [root]> select * from employee_table;
++-------------+---------------+------------+-------------------+--------+
+| employee_no | employee_name | join_date  | designation       | salary |
++-------------+---------------+------------+-------------------+--------+
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head     |  15000 |
+|          21 | Rajesh        | 02/07/2011 | Sanitization Head |  25000 |
++-------------+---------------+------------+-------------------+--------+
+2 rows in set (0.000 sec)
+
+MariaDB [root]> delete from employee where employee_no=21;
+Query OK, 1 row affected (0.031 sec)
+
+MariaDB [root]> select * from employee_table;
++-------------+---------------+------------+---------------+--------+
+| employee_no | employee_name | join_date  | designation   | salary |
++-------------+---------------+------------+---------------+--------+
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head |  15000 |
++-------------+---------------+------------+---------------+--------+
+1 row in set (0.000 sec)
+
+MariaDB [root]> delimiter $
+MariaDB [root]> create trigger empdelete2
+    -> AFTER DELETE on employee for each row
+    -> begin
+    -> DELETE FROM EMPLOYEE_TABLE where OLD.employee_no=EMPLOYEE_TABLE.employee_no;
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.050 sec)
+MariaDB [root]> insert into employee values(222,'Hari','11/12/2000','Decoration MGR',40000);
+Query OK, 1 row affected (0.034 sec)
+
+MariaDB [root]> select * from employee;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           1 | Abhi          | 14/04/2001 | manager        |  20000 |
+|           2 | Tejas         | 28/12/1999 | CameraMan      |  25000 |
+|           3 | Satyam        | 28/05/2000 | Legal Head     |  35000 |
+|           4 | Mayur         | 08/04/2000 | Script Writer  |  25000 |
+|           5 | Aditya        | 03/02/2001 | Stunt Head     |  25000 |
+|           6 | Pratik        | 11/02/2001 | CEO            |  50000 |
+|           7 | Saurabh       | 07/06/2000 | Car Owner      |  40000 |
+|           8 | Shreyas       | 18/06/2000 | Security Owner |  40000 |
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head  |  15000 |
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head  |  15000 |
+|         222 | Hari          | 11/12/2000 | Decoration MGR |  40000 |
++-------------+---------------+------------+----------------+--------+
+11 rows in set (0.000 sec)
+
+MariaDB [root]> select * from employee_table;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|          11 | Shubhda       | 03/04/2001 | Cleaning Head  |  15000 |
+|         222 | Hari          | 11/12/2000 | Decoration MGR |  40000 |
++-------------+---------------+------------+----------------+--------+
+2 rows in set (0.000 sec)
+
+MariaDB [root]> delete from employee where employee_no=11;
+Query OK, 2 rows affected (0.034 sec)
+
+MariaDB [root]> select * from employee_table;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|         222 | Hari          | 11/12/2000 | Decoration MGR |  40000 |
++-------------+---------------+------------+----------------+--------+
+1 row in set (0.000 sec)
+
+MariaDB [root]> select * from employee;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           1 | Abhi          | 14/04/2001 | manager        |  20000 |
+|           2 | Tejas         | 28/12/1999 | CameraMan      |  25000 |
+|           3 | Satyam        | 28/05/2000 | Legal Head     |  35000 |
+|           4 | Mayur         | 08/04/2000 | Script Writer  |  25000 |
+|           5 | Aditya        | 03/02/2001 | Stunt Head     |  25000 |
+|           6 | Pratik        | 11/02/2001 | CEO            |  50000 |
+|           7 | Saurabh       | 07/06/2000 | Car Owner      |  40000 |
+|           8 | Shreyas       | 18/06/2000 | Security Owner |  40000 |
+|         222 | Hari          | 11/12/2000 | Decoration MGR |  40000 |
++-------------+---------------+------------+----------------+--------+
+9 rows in set (0.000 sec)
+
+MariaDB [root]> delimiter $
+MariaDB [root]> Create trigger empupdate
+    -> AFTER UPDATE on employee for each row
+    -> Begin
+    -> UPDATE EMPLOYEE_TABLE SET
+    -> employee_name=old.employee_name,join_date=old.join_date,designation=old.designation,salary=old.salary,employee_no=old.employee_no; 
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.050 sec)
+
+MariaDB [root]> update employee set salary=60000 where employee_no=9;
+Query OK, 0 rows affected (0.030 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+MariaDB [root]> select * from employee;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           1 | Abhi          | 14/04/2001 | manager        |  20000 |
+|           2 | Tejas         | 28/12/1999 | CameraMan      |  25000 |
+|           3 | Satyam        | 28/05/2000 | Legal Head     |  35000 |
+|           4 | Mayur         | 08/04/2000 | Script Writer  |  25000 |
+|           5 | Aditya        | 03/02/2001 | Stunt Head     |  25000 |
+|           6 | Pratik        | 11/02/2001 | CEO            |  50000 |
+|           7 | Saurabh       | 07/06/2000 | Car Owner      |  40000 |
+|           8 | Shreyas       | 18/06/2000 | Security Owner |  40000 |
+|           9 | Hari          | 11/12/2000 | Decoration MGR |  60000 |
++-------------+---------------+------------+----------------+--------+
+9 rows in set (0.000 sec)
+
+MariaDB [root]> select * from employee_table;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           9 | Hari          | 11/12/2000 | Decoration MGR |  60000 |
++-------------+---------------+------------+----------------+--------+
+1 row in set (0.000 sec)
+
+MariaDB [root]> delimiter $
+MariaDB [root]> Create trigger empupdate2
+    -> BEFORE UPDATE on employee for each row
+    -> Begin
+    -> UPDATE EMPLOYEE_TABLE SET
+    -> employee_name=old.employee_name,join_date=old.join_date,designation=old.designation,salary=old.salary,employee_no=old.employee_no where employee_no=old.employee_no;
+    -> end;
+    -> $
+Query OK, 0 rows affected (0.0220 sec)
+
+MariaDB [root]> update employee set salary=70000 where employee_no=9;
+Query OK, 0 rows affected (0.033 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+MariaDB [root]> select * from employee;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           1 | Abhi          | 14/04/2001 | manager        |  20000 |
+|           2 | Tejas         | 28/12/1999 | CameraMan      |  25000 |
+|           3 | Satyam        | 28/05/2000 | Legal Head     |  35000 |
+|           4 | Mayur         | 08/04/2000 | Script Writer  |  25000 |
+|           5 | Aditya        | 03/02/2001 | Stunt Head     |  25000 |
+|           6 | Pratik        | 11/02/2001 | CEO            |  50000 |
+|           7 | Saurabh       | 07/06/2000 | Car Owner      |  40000 |
+|           8 | Shreyas       | 18/06/2000 | Security Owner |  40000 |
+|           9 | Hari          | 11/12/2000 | Decoration MGR |  70000 |
++-------------+---------------+------------+----------------+--------+
+9 rows in set (0.000 sec)
+
+MariaDB [root]> select * from employee_table;
++-------------+---------------+------------+----------------+--------+
+| employee_no | employee_name | join_date  | designation    | salary |
++-------------+---------------+------------+----------------+--------+
+|           9 | Hari          | 11/12/2000 | Decoration MGR |  70000 |
++-------------+---------------+------------+----------------+--------+
+1 row in set (0.000 sec)

@@ -1,0 +1,212 @@
+> db.createCollection("student");
+{ "ok" : 1 }
+>  db.student.insert({Rollno:1,name:'Anom',subject:'DBMS',marks:78});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({Rollno:24,name:'Rushikesh',subject:'OS',marks:90});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({Rollno:73,name:'Gayatri',subject:'TOC',marks:80});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({Rollno:73,name:'Himali',subject:'TOC',marks:78});
+WriteResult({ "nInserted" : 1 })
+> db.student.find()
+{ "_id" : ObjectId("5eabcd1f681a2cb3fbb871fd"), "Rollno" : 1, "name" : "Anom", "subject" : "DBMS", "marks" : 78 }
+{ "_id" : ObjectId("5eabcd73681a2cb3fbb871fe"), "Rollno" : 24, "name" : "Rushikesh", "subject" : "OS", "marks" : 90 }
+{ "_id" : ObjectId("5eabcdc0681a2cb3fbb871ff"), "Rollno" : 73, "name" : "Gayatri", "subject" : "TOC", "marks" : 80 }
+{ "_id" : ObjectId("5eabcdd1681a2cb3fbb87200"), "Rollno" : 73, "name" : "Himali", "subject" : "TOC", "marks" : 78 }
+
+MIN():
+>> db.student.aggregate([{$group : {_id : "$subject", marks : {$min : "$marks"}}}]);
+{ "_id" : "OS", "marks" : 90 }
+{ "_id" : "DBMS", "marks" : 78 }
+{ "_id" : "TOC", "marks" : 78 }
+
+MAX():
+> db.student.aggregate([{$group : {_id : "$subject", marks : {$max : "$marks"}}}]);
+{ "_id" : "OS", "marks" : 90 }
+{ "_id" : "DBMS", "marks" : 78 }
+{ "_id" : "TOC", "marks" : 80 }
+
+SUM():
+> db.student.aggregate([{$group : {_id : "$subject", marks : {$sum : "$marks"}}}]);
+{ "_id" : "OS", "marks" : 90 }
+{ "_id" : "DBMS", "marks" : 78 }
+{ "_id" : "TOC", "marks" : 158 }
+
+AVG():
+> db.student.aggregate([{$group : {_id : "$subject", marks : {$avg : "$marks"}}}]);
+{ "_id" : "OS", "marks" : 90 }
+{ "_id" : "DBMS", "marks" : 78 }
+{ "_id" : "TOC", "marks" : 79 }
+
+
+
+
+
+FIRST():
+> db.student.aggregate([{$group : {_id : "$subject", marks : {$first : "$marks"}}}]);
+{ "_id" : "OS", "marks" : 90 }
+{ "_id" : "DBMS", "marks" : 78 }
+{ "_id" : "TOC", "marks" : 80 }
+
+LAST():
+> db.student.aggregate([{$group : {_id : "$subject", marks : {$last : "$marks"}}}]);
+{ "_id" : "OS", "marks" : 90 }
+{ "_id" : "DBMS", "marks" : 78 }
+{ "_id" : "TOC", "marks" : 78 }
+
+mongodb indexing
+
+> use mydb
+switched to db mydb
+> db.student.insert({Rollno:1,name:'Anom ',subject:'DBMS',marks:78});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({Rollno:2,name:'Gayatri ',subject:'TOC',marks:80});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({Rollno:3,name:'Himali ',subject:'TOC',marks:79});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({Rollno:4,name:'Rushikesh ',subject:'OS',marks:90});
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({Rollno:5,name:'Viraj ',subject:'TOC',marks:70});
+WriteResult({ "nInserted" : 1 })
+> db.student.find();
+{ "_id" : ObjectId("5eabd58663764a265e7a254e"), "Rollno" : 1, "name" : "Anom ", "subject" : "DBMS", "marks" : 78 }
+{ "_id" : ObjectId("5eabd58763764a265e7a254f"), "Rollno" : 2, "name" : "Gayatri ", "subject" : "TOC", "marks" : 80 }
+{ "_id" : ObjectId("5eabd58863764a265e7a2550"), "Rollno" : 3, "name" : "Himali ", "subject" : "TOC", "marks" : 79 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2551"), "Rollno" : 4, "name" : "Rushikesh ", "subject" : "OS", "marks" : 90 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2552"), "Rollno" : 5, "name" : "Viraj ", "subject" : "TOC", "marks" : 70 }
+
+USING ENSURE INDEX:
+> db.student.ensureIndex({Rollno:1});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+
+USING GET INDEX:
+> db.student.getIndexes();
+[
+        {
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_",
+                "ns" : "mydb.student"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "Rollno" : 1
+                },
+                "name" : "Rollno_1",
+                "ns" : "mydb.student"
+        }
+
+USING MINIMUM INDEX:
+> db.student.find().min({Rollno:4}).hint({Rollno:1});
+{ "_id" : ObjectId("5eabd58963764a265e7a2551"), "Rollno" : 4, "name" : "Rushikesh ", "subject" : "OS", "marks" : 90 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2552"), "Rollno" : 5, "name" : "Viraj ", "subject" : "TOC", "marks" : 70 }
+
+USING MAXIMUM INDEX:
+> db.student.find().max({Rollno:2}).hint({Rollno:1});
+{ "_id" : ObjectId("5eabd58663764a265e7a254e"), "Rollno" : 1, "name" : "Anom ", "subject" : "DBMS", "marks" : 78 }
+
+USING MINIMUM INDEX:
+> db.student.find().max({Rollno:3}).hint({Rollno:1});
+{ "_id" : ObjectId("5eabd58663764a265e7a254e"), "Rollno" : 1, "name" : "Anom ", "subject" : "DBMS", "marks" : 78 }
+{ "_id" : ObjectId("5eabd58763764a265e7a254f"), "Rollno" : 2, "name" : "Gayatri ", "subject" : "TOC", "marks" : 80 }
+> db.student.find().min({Rollno:2}).hint({Rollno:1});
+{ "_id" : ObjectId("5eabd58763764a265e7a254f"), "Rollno" : 2, "name" : "Gayatri ", "subject" : "TOC", "marks" : 80 }
+{ "_id" : ObjectId("5eabd58863764a265e7a2550"), "Rollno" : 3, "name" : "Himali ", "subject" : "TOC", "marks" : 79 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2551"), "Rollno" : 4, "name" : "Rushikesh ", "subject" : "OS", "marks" : 90 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2552"), "Rollno" : 5, "name" : "Viraj ", "subject" : "TOC", "marks" : 70 }
+
+SORT INDEX IN ASCENDING
+> db.student.find().sort({Rollno:1});
+{ "_id" : ObjectId("5eabd58663764a265e7a254e"), "Rollno" : 1, "name" : "Anom ", "subject" : "DBMS", "marks" : 78 }
+{ "_id" : ObjectId("5eabd58763764a265e7a254f"), "Rollno" : 2, "name" : "Gayatri ", "subject" : "TOC", "marks" : 80 }
+{ "_id" : ObjectId("5eabd58863764a265e7a2550"), "Rollno" : 3, "name" : "Himali ", "subject" : "TOC", "marks" : 79 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2551"), "Rollno" : 4, "name" : "Rushikesh ", "subject" : "OS", "marks" : 90 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2552"), "Rollno" : 5, "name" : "Viraj ", "subject" : "TOC", "marks" : 70 }
+
+SORTING IN DESCENDING
+> db.student.find().sort({Rollno:-1});
+{ "_id" : ObjectId("5eabd58963764a265e7a2552"), "Rollno" : 5, "name" : "Viraj ", "subject" : "TOC", "marks" : 70 }
+{ "_id" : ObjectId("5eabd58963764a265e7a2551"), "Rollno" : 4, "name" : "Rushikesh ", "subject" : "OS", "marks" : 90 }
+{ "_id" : ObjectId("5eabd58863764a265e7a2550"), "Rollno" : 3, "name" : "Himali ", "subject" : "TOC", "marks" : 79 }
+{ "_id" : ObjectId("5eabd58763764a265e7a254f"), "Rollno" : 2, "name" : "Gayatri ", "subject" : "TOC", "marks" : 80 }
+{ "_id" : ObjectId("5eabd58663764a265e7a254e"), "Rollno" : 1, "name" : "Anom ", "subject" : "DBMS", "marks" : 78 }
+
+ENSURE INDEX:
+> db.student.ensureIndex({Rollno:-1});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 2,
+        "numIndexesAfter" : 3,
+        "ok" : 1
+}
+
+> db.student.getIndexes();
+[
+        {
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_",
+                "ns" : "mydb.student"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "Rollno" : 1
+                },
+                "name" : "Rollno_1",
+                "ns" : "mydb.student"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "Rollno" : -1
+                },
+                "name" : "Rollno_-1",
+                "ns" : "mydb.student"
+        }
+]
+
+EXPLAIN:
+> db.student.find().explain();
+{
+        "queryPlanner" : {
+                "plannerVersion" : 1,
+                "namespace" : "mydb.student",
+                "indexFilterSet" : false,
+                "parsedQuery" : {
+
+                },
+                "queryHash" : "8B3D4AB8",
+                "planCacheKey" : "8B3D4AB8",
+                "winningPlan" : {
+                        "stage" : "COLLSCAN",
+                        "direction" : "forward"
+                },
+                "rejectedPlans" : [ ]
+        },
+        "serverInfo" : {
+                "host" : "DESKTOP-DV27PE6",
+                "port" : 27017,
+                "version" : "4.2.6",
+                "gitVersion" : "20364840b8f1af16917e4c23c1b5f5efd8b352f8"
+        },
+        "ok" : 1
+}
+
+DROP INDEX:
+> db.student.dropIndex({Rollno:1});
+{ "nIndexesWas" : 3, "ok" : 1 }
+>
+
+
+

@@ -1,0 +1,89 @@
+> db.author.save({  "book_title" : "MongoDB Tutorial", "author_name" : "aparajita",  "status" : "active", "publish_year": "2016" })
+> db.author.save({  "book_title" : "Software Testing", "author_name" : "Rajesh",  "status" : "active", "publish_year": "2015" })
+WriteResult({ "nInserted" : 1 })
+> db.author.save({  "book_title" : "Node JS  Tut", "author_name" : "Kritika",  "status" : "active", "publish_year": "2017" })
+WriteResult({ "nInserted" : 1 })
+> db.author.save({  "book_title" : "PHP & HTML", "author_name" : "Rajesh",  "status" : "passive", "publish_year": "2016" })
+WriteResult({ "nInserted" : 1 })
+> db.author.find()
+{ "_id" : ObjectId("5eabe0e163764a265e7a2553"), "book_title" : "MongoDB Tutorial", "author_name" : "aparajita", "status" : "active", "publish_year" : "2016" }
+{ "_id" : ObjectId("5eabe10763764a265e7a2554"), "book_title" : "Software Testing", "author_name" : "Rajesh", "status" : "active", "publish_year" : "2015" }
+{ "_id" : ObjectId("5eabe12a63764a265e7a2555"), "book_title" : "Node JS  Tut", "author_name" : "Kritika", "status" : "active", "publish_year" : "2017" }
+{ "_id" : ObjectId("5eabe14b63764a265e7a2556"), "book_title" : "PHP & HTML", "author_name" : "Rajesh", "status" : "passive", "publish_year" : "2016" }
+> db.author.mapReduce(  function() { emit(this.author_name,1) },  function(key, values) {return Array.sum(values)},  { query:{status:"active"}, out:"author_total" } ).find()
+{ "_id" : "Kritika", "value" : 1 }
+{ "_id" : "Rajesh", "value" : 1 }
+{ "_id" : "aparajita", "value" : 1 }
+> db.author.save({  "book_title" : "DBMS R2", "author_name" : "Rajesh",  "status" : "active", "publish_year": "2016" })
+WriteResult({ "nInserted" : 1 })
+> db.author.mapReduce(  function() { emit(this.author_name,1) },  function(key, values) {return Array.sum(values)},  { query:{status:"active"}, out:"author_total" } ).find()
+{ "_id" : "Kritika", "value" : 1 }
+{ "_id" : "Rajesh", "value" : 2 }
+{ "_id" : "aparajita", "value" : 1 }
+
+
+Example 2:
+> db.stud.insert({ Name: "Rushi", Marks:80 })
+WriteResult({ "nInserted" : 1 })
+> db.stud.insert({ Name: "Gayatri", Marks:78 })
+WriteResult({ "nInserted" : 1 })
+> db.stud.insert({ Name: "Himali", Marks:77 })
+WriteResult({ "nInserted" : 1 })
+> db.stud.insert({ Name: "Anom", Marks:79 })
+WriteResult({ "nInserted" : 1 })
+> db.stud.insert({ Name: "Viraj", Marks:75 })
+WriteResult({ "nInserted" : 1 })
+> db.stud.find()
+{ "_id" : ObjectId("5eabe52230a0a665ce00002b"), "Name" : "Rushi", "Marks" : 80 }
+{ "_id" : ObjectId("5eabe52430a0a665ce00002c"), "Name" : "Gayatri", "Marks" : 78 }
+{ "_id" : ObjectId("5eabe52430a0a665ce00002d"), "Name" : "Himali", "Marks" : 77 }
+{ "_id" : ObjectId("5eabe52530a0a665ce00002e"), "Name" : "Anom", "Marks" : 79 }
+{ "_id" : ObjectId("5eabe52630a0a665ce00002f"), "Name" : "Viraj", "Marks" : 75 }
+> db.stud.mapReduce( function(){ emit(this.Name,1)}, function(key, values) {return Array.sum(values)}, {out: "Name_Total"});
+{
+        "result" : "Name_Total",
+        "timeMillis" : 254,
+        "counts" : {
+                "input" : 5,
+                "emit" : 5,
+                "reduce" : 0,
+                "output" : 5
+        },
+        "ok" : 1
+}
+> db.stud.mapReduce( function(){ emit(this.Name,1)}, function(key, values) {return Array.sum(values)}, {out: "Name_Total" }).find()
+{ "_id" : "Anom", "value" : 1 }
+{ "_id" : "Gayatri", "value" : 1 }
+{ "_id" : "Himali", "value" : 1 }
+{ "_id" : "Rushi", "value" : 1 }
+{ "_id" : "Viraj", "value" : 1 }
+
+> db.stud.mapReduce( function() { emit(this.Name,this.Marks) }, function(key, values) {return Array.sum(values)}, {out: "Total_Marks" }).find()
+{ "_id" : "Anom", "value" : 79 }
+{ "_id" : "Gayatri", "value" : 78 }
+{ "_id" : "Himali", "value" : 77 }
+{ "_id" : "Rushi", "value" : 80 }
+{ "_id" : "Viraj", "value" : 75 }
+
+>  db.stud.mapReduce( function(){ emit(this.Name,this.Marks)}, function(key, values) {return Array.sum(values)}, {out: "Name_Total"}).find().sort({value:1})
+{ "_id" : "Viraj", "value" : 75 }
+{ "_id" : "Himali", "value" : 77 }
+{ "_id" : "Gayatri", "value" : 78 }
+{ "_id" : "Anom", "value" : 79 }
+{ "_id" : "Rushi", "value" : 80 }
+
+> db.stud.mapReduce( function(){ emit(this.Name,1)}, function(key, values) {return Array.sum(values)}, {query:{Marks:{$gt:70}},out: 'Name_Total'}).find()
+{ "_id" : "Anom", "value" : 1 }
+{ "_id" : "Gayatri", "value" : 1 }
+{ "_id" : "Himali", "value" : 1 }
+{ "_id" : "Rushi", "value" : 1 }
+{ "_id" : "Viraj", "value" : 1 }
+> db.stud.insert({ Name: "Raj", Marks:65 })
+WriteResult({ "nInserted" : 1 })
+> db.stud.mapReduce( function(){ emit(this.Name,1)}, function(key, values) {return Array.sum(values)}, {query:{Marks:{$gt:70}},out: 'Name_Total'}).find()
+{ "_id" : "Anom", "value" : 1 }
+{ "_id" : "Gayatri", "value" : 1 }
+{ "_id" : "Himali", "value" : 1 }
+{ "_id" : "Rushi", "value" : 1 }
+{ "_id" : "Viraj", "value" : 1 }
+>

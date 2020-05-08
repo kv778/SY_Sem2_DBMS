@@ -1,0 +1,43 @@
+1. Insert(Create)
+> db.student.insert({ regNo: "3014", name: "Viraj", course: { courseName: "Btech", duration: "4 Years" }, address: { city: "Pune", state: "MH", country: "India" } })
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({ regNo: "78", name: "Rushikesh", course: { courseName: "Btech", duration: "4 Years" }, address: { city: "Pune", state: "MH", country: "India" } })
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({ regNo: "73", name: "Gayatri", course: { courseName: "Btech", duration: "4 Years" }, address: { city: "Dhule", state: "MH", country: "India" } })
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({ regNo: "73", name: "Himali", course: { courseName: "Btech", duration: "4 Years" }, address: { city: "Jalgoan", state: "MH", country: "India" } })
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({ regNo: "73", name: "Anom", course: { courseName: "Btech", duration: "4 Years" }, address: { city: "Pune", state: "MH", country: "India" } })
+WriteResult({ "nInserted" : 1 })
+> db.student.insert({ regNo: "19", name: "Viraj", course: { courseName: "Btech", duration: "4 Years" }, address: { city: "Pune", state: "MH", country: "India" } })
+WriteResult({ "nInserted" : 1 })
+
+2.Read
+> db.student.find()
+{ "_id" : ObjectId("5eabc21e6b8d8a3729ccc7b3"), "regNo" : "3014", "name" : "Test Student", "course" : { "courseName" : "MCA", "duration" : "3 Years" }, "address" : { "city" : "Bangalore", "state" : "KA", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2406b8d8a3729ccc7b4"), "regNo" : "78", "name" : "Rushikesh", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2566b8d8a3729ccc7b5"), "regNo" : "73", "name" : "Gayatri", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Dhule", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2676b8d8a3729ccc7b6"), "regNo" : "73", "name" : "Himali", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Jalgoan", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc27f6b8d8a3729ccc7b7"), "regNo" : "73", "name" : "Anom", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2aa6b8d8a3729ccc7b8"), "regNo" : "19", "name" : "Viraj", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+> db.student.find({"address.city" : "Pune"})
+{ "_id" : ObjectId("5eabc2406b8d8a3729ccc7b4"), "regNo" : "78", "name" : "Rushikesh", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc27f6b8d8a3729ccc7b7"), "regNo" : "73", "name" : "Anom", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2aa6b8d8a3729ccc7b8"), "regNo" : "19", "name" : "Viraj", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+3. Update
+> db.student.update({"name" : "Anom"},{$set: {"regNo" : "24"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.student.find({"address.city" : "Pune"})
+{ "_id" : ObjectId("5eabc2406b8d8a3729ccc7b4"), "regNo" : "78", "name" : "Rushikesh", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc27f6b8d8a3729ccc7b7"), "regNo" : "24", "name" : "Anom", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2aa6b8d8a3729ccc7b8"), "regNo" : "19", "name" : "Viraj", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+4.Delete 
+> db.student.remove({"regNo" : "3014"})
+WriteResult({ "nRemoved" : 1 })
+> db.student.find()
+{ "_id" : ObjectId("5eabc2406b8d8a3729ccc7b4"), "regNo" : "78", "name" : "Rushikesh", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2566b8d8a3729ccc7b5"), "regNo" : "73", "name" : "Gayatri", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Dhule", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2676b8d8a3729ccc7b6"), "regNo" : "73", "name" : "Himali", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Jalgoan", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc27f6b8d8a3729ccc7b7"), "regNo" : "24", "name" : "Anom", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+{ "_id" : ObjectId("5eabc2aa6b8d8a3729ccc7b8"), "regNo" : "19", "name" : "Viraj", "course" : { "courseName" : "Btech", "duration" : "4 Years" }, "address" : { "city" : "Pune", "state" : "MH", "country" : "India" } }
+
